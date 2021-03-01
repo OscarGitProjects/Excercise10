@@ -1,16 +1,18 @@
 "use strict";
 
 // Set up eventlistners
-let btnDrawACard = document.querySelector('#btnDrawACard').addEventListener('click', GetDeck);
+const btnDrawACard = document.querySelector('#btnDrawACard').addEventListener('click', GetDeck);
 
-// true om vi har en kortlek
-let hasDeck = false;
+// Här sparar jag globala variabler
+let app = { 
+    // true om vi har en kortlek
+    hasDeck: false,
+    // true om vi skall blanda om kortleken
+    shuffelDeck: false,
+    // id för den kortlek som används
+    deckId: ''
+};
 
-// true om vi skall blanda om kortleken
-let shuffelDeck = false;
-
-// id för den kortlek som används
-let deckId = '';
 
 
 /*
@@ -18,11 +20,12 @@ let deckId = '';
 */
 function GetDeck()
 {
-    if(hasDeck === false)
+    
+    if(app.hasDeck === false)
     {
-        shuffelDeck = false;
-        hasDeck = false;
-        deckId = '';
+        app.shuffelDeck = false;
+        app.hasDeck = false;
+        app.deckId = '';
     
         fetch('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
             .then(res => res.json())
@@ -31,9 +34,9 @@ function GetDeck()
 
                 if(data.success === true)
                 {// Vi har en ny kortlek
-                    hasDeck = true;
-                    shuffelDeck = false;
-                    deckId = data.deck_id;
+                    app.hasDeck = true;
+                    app.shuffelDeck = false;
+                    app.deckId = data.deck_id;
 
                     // Hämta kort
                     GetCard();
@@ -55,18 +58,18 @@ function GetDeck()
 */
 function ShuffleDeck()
 {
-    if(shuffelDeck === true)
+    if(app.shuffelDeck === true)
     {
-        fetch(`https://deckofcardsapi.com/api/deck/${deckId}/shuffle/`)
+        fetch(`https://deckofcardsapi.com/api/deck/${app.deckId}/shuffle/`)
         .then(res => res.json())
         .then(data => {
             console.log('ShuffleDeck: ' + data.success + ', ' + data.deck_id + ', ' + data.remaining + ', ' + data.shuffled); 
 
             if(data.success === true)
             {// Vi har blandat om kortleken
-                shuffelDeck = false;
-                hasDeck = true;
-                deckId = data.deck_id;
+                app.shuffelDeck = false;
+                app.hasDeck = true;
+                app.deckId = data.deck_id;
 
                 // Hämta kort
                 GetCard();
@@ -84,9 +87,9 @@ function ShuffleDeck()
 */
 function GetCard()
 {
-    if(hasDeck === true)
+    if(app.hasDeck === true)
     {
-        fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`)
+        fetch(`https://deckofcardsapi.com/api/deck/${app.deckId}/draw/?count=1`)
             .then(res => res.json())
             .then(data => {
                 console.log('GetCard: ' + data.success + ', ' + data.deck_id + ', ' + data.remaining); 
@@ -97,7 +100,7 @@ function GetCard()
                 } 
                 else
                 {// Alla kort är dragna. Blanda om korleken
-                    shuffelDeck = true;
+                    app.shuffelDeck = true;
                     ShuffleDeck();
                 }               
             })

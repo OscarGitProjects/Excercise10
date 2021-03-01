@@ -1,9 +1,9 @@
 "use strict";
 
 // Set up eventlistners
-let btnSearch = document.querySelector('#btnSearch').addEventListener('click', Search);
+const btnSearch = document.querySelector('#btnSearch').addEventListener('click', Search);
 
-let txtAreaResult = document.getElementById('txtAreaResult');
+const txtAreaResult = document.getElementById('txtAreaResult');
 
 
 function Search()
