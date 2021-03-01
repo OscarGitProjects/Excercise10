@@ -1,0 +1,13 @@
+body {
+    margin-left: 10%;
+    margin-right: 10%;  
+    background-color:white;
+}
+
+#my_container {
+    background-color:beige;
+}
+
+.errorMessage {
+    color: red;
+}
